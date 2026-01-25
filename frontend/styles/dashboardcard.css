@@ -1,0 +1,27 @@
+/* ---------- Dashboard Card ---------- */
+
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 1.5rem;
+    backdrop-filter: blur(12px);
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  
+  .dashboard-card:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.08);
+  }
+  
+  .card-title {
+    font-size: 0.95rem;
+    opacity: 0.75;
+    margin-bottom: 0.6rem;
+  }
+  
+  .card-value {
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+  

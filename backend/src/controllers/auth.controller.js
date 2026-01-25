@@ -34,9 +34,16 @@ const signup = async (req, res) => {
       userId: user.id
     })
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Signup failed" });
-  }
+    if (error.code === "P2002") {
+      return res.status(409).json({
+        message: "Email already registered"
+      });
+    }
+  
+    res.status(500).json({
+      message: "Signup failed"
+    });
+  }  
 }
 
 const login = async (req, res) => {

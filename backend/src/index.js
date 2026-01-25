@@ -1,6 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const passport = require("passport");
+
+require("./config/passport");
+
 
 dotenv.config();
 
@@ -20,7 +24,7 @@ const authRoutes = require("./routes/auth.routes");
 const queueRoutes = require("./routes/queue.routes");
 
 app.use("/api/auth", authRoutes);
-app.use("/api/queue", queueRoutes);
+app.use("/api/queues", queueRoutes);
 
 
 const PORT = process.env.PORT || 5001;

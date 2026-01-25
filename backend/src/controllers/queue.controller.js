@@ -1,120 +1,99 @@
-const prisma = require("../prisma.js");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
-// business queue creation
-const createQueue = async (req, res) => {
+// BUSINESS: create queue
+exports.createQueue = async (req, res) => {
   try {
-    if (req.user.role !== "BUSINESS") {
-      return res.status(403).json({ message: "Only business can create queue" })
-    }
-
     const { name } = req.body;
-
-    if (!name) {
-      return res.status(400).json({ message: "Queue name required" })
-    }
+    const userId = req.user.id;
 
     const queue = await prisma.queue.create({
       data: {
         name,
-        businessId: req.user.id
+        businessId: userId
       }
-    })
-    res.status(201).json(queue)
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: "Failed to create queue" })
+    });
+
+    res.status(201).json(queue);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to create queue" });
   }
 };
 
-// queue joining  
-const joinQueue = async (req, res) => {
+// CUSTOMER: join queue
+exports.joinQueue = async (req, res) => {
   try {
-    if (req.user.role !== "CUSTOMER") {
-      return res.status(403).json({ message: "Only customers can join queue" })
+    const { queueId } = req.body;
+    const userId = req.user.id;
+
+    // prevent duplicate join
+    const existing = await prisma.queueEntry.findFirst({
+      where: { queueId, userId }
+    });
+
+    if (existing) {
+      return res.status(400).json({ message: "Already in queue" });
     }
 
-    const { queueId } = req.body
-    if (!queueId) {
-      return res.status(400).json({ message: "Queue ID required" })
-    }
     const entry = await prisma.queueEntry.create({
       data: {
-        userId: req.user.id,
-        queueId
+        queueId,
+        userId
       }
-    })
+    });
 
-    res.status(201).json(entry)
-  } catch (error) {
-    if (error.code === "P2002") {
-      return res.status(409).json({ message: "Already in queue " })
-    }
-
-    console.error(error);
-    res.status(500).json({ message: "Failed to join queue" })
+    res.json({ message: "Joined queue", entry });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to join queue" });
   }
-}
-// call next customer for business admin
-const callNext = async (req, res) => {
+};
+
+// BUSINESS: call next customer
+exports.callNext = async (req, res) => {
   try {
-    if (req.user.role !== "BUSINESS") {
-      return res.status(403).json({ message: "Only business can call next" })
-    }
+    const { queueId } = req.body;
 
-    const { queueId } = req.body
-
-    const nextEntry = await prisma.queueEntry.findFirst({
+    const next = await prisma.queueEntry.findFirst({
       where: {
         queueId,
         status: "WAITING"
       },
-      orderBy: {
-        joinedAt: "asc"
-      }
-    })
+      orderBy: { createdAt: "asc" }
+    });
 
-    if (!nextEntry) {
-      return res.json({ message: "No customers in queue" })
+    if (!next) {
+      return res.json({ message: "No customers waiting" });
     }
 
     await prisma.queueEntry.update({
-      where: { id: nextEntry.id },
-      data: { status: "CALLED" }
-    })
-
-    res.json({ message: "Customer called", entryId: nextEntry.id })
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to call next customer" })
-  }
-}
-
-// view queue status
-const getQueueStatus = async (req, res) => {
-  try {
-    const { queueId } = req.params
-
-    const entries = await prisma.queueEntry.findMany({
-      where: { queueId },
-      orderBy: { joinedAt: "asc" },
-      select: {
-        id: true,
-        status: true,
-        joinedAt: true,
-        userId: true
-      }
+      where: { id: next.id },
+      data: { status: "SERVED" }
     });
 
-    res.json(entries);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to fetch queue status" });
+    res.json({ message: "Customer served" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to call next" });
   }
 };
 
-module.exports = {
-  createQueue,
-  joinQueue,
-  callNext,
-  getQueueStatus
+// ANY USER: get queue status
+exports.getQueueStatus = async (req, res) => {
+  try {
+    const { queueId } = req.params;
+    const userId = req.user.id;
+
+    const entries = await prisma.queueEntry.findMany({
+      where: { queueId },
+      orderBy: { createdAt: "asc" }
+    });
+
+    const myIndex = entries.findIndex(e => e.userId === userId);
+
+    res.json({
+      position: myIndex === -1 ? null : myIndex + 1,
+      total: entries.length
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to get queue status" });
+  }
 };
