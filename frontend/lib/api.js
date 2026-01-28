@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:5001/api";
+const API_BASE_URL = "https://q-less-gh3z.onrender.com";
 
 export const loginUser = async (email, password) => {
   const res = await fetch(`${API_BASE_URL}/auth/login`, {
