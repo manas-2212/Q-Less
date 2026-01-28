@@ -43,6 +43,10 @@ export default function SignupPage() {
 
       <main className="signup-page">
         <form className="signup-card" onSubmit={handleSignup}>
+        <Link href="/" className="back-home">
+  ← Back to Home
+</Link>
+
           <h2 className="signup-title">Create Account</h2>
 
           {/* Role selector */}

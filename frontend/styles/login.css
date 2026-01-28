@@ -113,3 +113,21 @@
     text-align: center;
   }
   
+  .back-home {
+    align-self: flex-start;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-bottom: 0.8rem;
+    padding: 0;
+    text-decoration: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  
+  .back-home:hover {
+    opacity: 1;
+    transform: translateX(-2px);
+  }
+  

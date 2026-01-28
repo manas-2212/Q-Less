@@ -50,6 +50,10 @@ export default function LoginPage() {
 
       <main className="login-page">
         <form className="login-card" onSubmit={handleLogin}>
+        <Link href="/" className="back-home">
+          ← Back to Home
+        </Link>
+
           <h2 className="login-title">Welcome Back</h2>
 
           <input
@@ -70,7 +74,7 @@ export default function LoginPage() {
             className="login-input"
           />
 
-          {/* Google OAuth */}
+        {/* o auth */}
           <div className="google-icon-row" onClick={handleGoogleLogin}>
             <img
               src="/google.png"

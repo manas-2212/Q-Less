@@ -53,6 +53,5 @@ model QueueEntry {
 
   user  User  @relation(fields: [userId], references: [id])
   queue Queue @relation(fields: [queueId], references: [id])
-
-  @@unique([userId, queueId])
 }
+

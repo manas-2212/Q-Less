@@ -21,7 +21,7 @@ export default function VideoBackground() {
           height: "100%",
           objectFit: "cover",
           filter: "blur(4px)",
-          opacity: 0.12
+          opacity: 0.90
         }}
       >
         <source src="/videos/background.mp4" type="video/mp4" />

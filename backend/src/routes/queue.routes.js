@@ -6,12 +6,16 @@ const {
   createQueue,
   joinQueue,
   callNext,
-  getQueueStatus
+  getQueueStatus,
+  getAllQueues,
+  serveCustomer,
+  getBusinessQueues
 } = require("../controllers/queue.controller");
 
 
 router.use(authMiddleware);
 
+router.get("/business", getBusinessQueues);
 
 router.post("/create", createQueue);
 
@@ -19,7 +23,12 @@ router.post("/create", createQueue);
 router.post("/join", joinQueue);
 
 
+
 router.post("/call-next", callNext);
+
+router.post("/serve", serveCustomer);
+
+router.get("/", getAllQueues);
 
 
 router.get("/:queueId", getQueueStatus);
