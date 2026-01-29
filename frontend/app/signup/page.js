@@ -34,7 +34,7 @@ export default function SignupPage() {
 
   const handleGoogleSignup = () => {
     // role will be handled after OAuth (we’ll do this later)
-    window.location.href = "http://localhost:5001/api/auth/google";
+    window.location.href = `https://q-less-gh3z.onrender.com/api/auth/google`;
   };
 
   return (
