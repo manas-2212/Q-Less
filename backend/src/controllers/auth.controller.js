@@ -10,14 +10,14 @@ const signup = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    if (!["CUSTOMER", "BUSINESS"].includes(role)) {
-      return res.status(400).json({ message: "Invalid role" });
+    if (!["CUSTOMER","BUSINESS"].includes(role)) {
+      return res.status(400).json({ message:"Invalid role"});
     }
     const existingUser = await prisma.user.findUnique({
-      where: { email }
+      where:{email}
     })
-    if (existingUser) {
-      return res.status(409).json({ message: "User already exists" })
+    if(existingUser) {
+      return res.status(409).json({message: "User already exists"})
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
