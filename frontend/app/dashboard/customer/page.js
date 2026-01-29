@@ -27,9 +27,7 @@ export default function CustomerDashboard() {
 
   const pollingRef = useRef(null);
 
-  /* ===========================
-     FETCH ALL QUEUES
-  =========================== */
+/* FETCH ALL QUEUES */
   useEffect(() => {
     if (!token) return;
 
@@ -42,8 +40,8 @@ export default function CustomerDashboard() {
       }
     };
 
-    fetchQueues();
-  }, [token]);
+    fetchQueues()
+  }, [token])
 
 
   useEffect(() => {
@@ -65,9 +63,7 @@ export default function CustomerDashboard() {
     return () => clearInterval(pollingRef.current);
   }, [joinedQueueId, token, status]);
 
-  /* ===========================
-     JOIN QUEUE
-  =========================== */
+  /* JOIN QUEUE*/
   const handleJoinQueue = async (queueId) => {
     setLoading(true);
     try {

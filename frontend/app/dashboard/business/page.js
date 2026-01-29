@@ -56,7 +56,6 @@ export default function BusinessDashboard() {
     }
   };
 
-
   const handleCallNext = async (queueId) => {
     try {
       await callNextCustomer(token, queueId);

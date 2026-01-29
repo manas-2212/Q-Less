@@ -23,7 +23,6 @@ export default function Home() {
   return (
     <>
       <VideoBackground />
-
       {/* HERO */}
       <main className="home-hero">
         <h1 className="home-title">Q-Less</h1>

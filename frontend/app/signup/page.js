@@ -33,14 +33,12 @@ export default function SignupPage() {
   };
 
   const handleGoogleSignup = () => {
-    // role will be handled after OAuth (we’ll do this later)
     window.location.href = `https://q-less-gh3z.onrender.com/api/auth/google`;
   };
 
   return (
     <>
       <VideoBackground />
-
       <main className="signup-page">
         <form className="signup-card" onSubmit={handleSignup}>
         <Link href="/" className="back-home">
@@ -54,15 +52,11 @@ export default function SignupPage() {
             <div
               className={`role-option ${role === "CUSTOMER" ? "active" : ""}`}
               onClick={() => setRole("CUSTOMER")}
-            >
-              I’m a Customer
-            </div>
+            >I’m a Customer</div>
             <div
               className={`role-option ${role === "BUSINESS" ? "active" : ""}`}
               onClick={() => setRole("BUSINESS")}
-            >
-              I’m a Business
-            </div>
+            >I’m a Business</div>
           </div>
 
           <input
@@ -110,5 +104,5 @@ export default function SignupPage() {
         </form>
       </main>
     </>
-  );
+  )
 }

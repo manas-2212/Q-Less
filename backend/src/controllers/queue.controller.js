@@ -1,9 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-/* ===========================
-   BUSINESS: create queue
-=========================== */
+/*business logic: create queue*/
 exports.createQueue = async (req, res) => {
   try {
     const { name } = req.body;
@@ -18,15 +16,12 @@ exports.createQueue = async (req, res) => {
 
     res.status(201).json(queue);
   } catch (err) {
-    console.error("🔥 createQueue error:", err);
-    res.status(500).json({ message: "Failed to create queue" });
+    console.error("createQueue error:", err);
+    res.status(500).json({ message: "Failed to create queue" })
   }
 };
 
-/* ===========================
-   CUSTOMER: join queue
-   (NO restrictions now)
-=========================== */
+/* customer logic: joinoing queue */
 exports.joinQueue = async (req, res) => {
   try {
     const { queueId } = req.body;
@@ -37,22 +32,20 @@ exports.joinQueue = async (req, res) => {
         queueId,
         userId
       }
-    });
-
+    })
     res.json({
       message: "Joined queue",
       entry
     });
+
+
   } catch (err) {
-    console.error("🔥 joinQueue error:", err);
-    res.status(500).json({ message: "Failed to join queue" });
+    console.error("joinQueue error:", err);
+    res.status(500).json({ message: "Failed to join queue" })
   }
 };
 
-/* ===========================
-   BUSINESS: call next customer
-   WAITING → CALLED
-=========================== */
+/* for business: call next, for customer WAITING -> CALLED*/
 exports.callNext = async (req, res) => {
   try {
     const { queueId } = req.body;
@@ -65,7 +58,7 @@ exports.callNext = async (req, res) => {
       orderBy: {
         joinedAt: "asc"
       }
-    });
+    })
 
     if (!nextEntry) {
       return res.json({ message: "No customers waiting" });
@@ -74,21 +67,19 @@ exports.callNext = async (req, res) => {
     await prisma.queueEntry.update({
       where: { id: nextEntry.id },
       data: { status: "CALLED" }
-    });
+    })
 
     res.json({
       message: "Customer called",
       userId: nextEntry.userId
     });
   } catch (err) {
-    console.error("🔥 callNext error:", err);
+    console.error("callNext error:", err)
     res.status(500).json({ message: "Failed to call next" });
   }
 };
 
-/* ===========================
-   ANY USER: get queue status
-=========================== */
+/* (GPT logic) get queue status */
 exports.getQueueStatus = async (req, res) => {
   try {
     const { queueId } = req.params;
@@ -122,9 +113,7 @@ exports.getQueueStatus = async (req, res) => {
   }
 };
 
-/* ===========================
-   CUSTOMER: get all active queues
-=========================== */
+/* all active queues */
 exports.getAllQueues = async (req, res) => {
   try {
     const queues = await prisma.queue.findMany({
@@ -135,45 +124,47 @@ exports.getAllQueues = async (req, res) => {
         name: true,
         createdAt: true
       }
-    });
-
+    })
     res.json(queues);
   } catch (err) {
-    console.error("🔥 getAllQueues error:", err);
+    console.error("getAllQueues error:", err);
     res.status(500).json({ message: "Failed to fetch queues" });
   }
 };
 
-/* ===========================
-   BUSINESS: serve customer
-   CALLED → SERVED
-=========================== */
+/* logic for served screen
+   business: serve customer
+   CALLED -> SERVED */
 exports.serveCustomer = async (req, res) => {
   try {
-    const { queueId } = req.body;
-
+    const { queueId } = req.body
     const called = await prisma.queueEntry.findFirst({
       where: {
         queueId,
         status: "CALLED"
       }
-    });
+    })
 
-    if (!called) {
+    if(!called){
       return res.json({ message: "No customer being served" });
     }
 
     await prisma.queueEntry.update({
       where: { id: called.id },
       data: { status: "SERVED" }
-    });
+    })
 
     res.json({ message: "Customer served" });
   } catch (err) {
-    console.error("🔥 serveCustomer error:", err);
+    console.error("serveCustomer error:", err);
     res.status(500).json({ message: "Failed to serve customer" });
   }
-};
+}
+
+
+
+
+
 
 // BUSINESS: get own queues
 exports.getBusinessQueues = async (req, res) => {
@@ -183,11 +174,11 @@ exports.getBusinessQueues = async (req, res) => {
     const queues = await prisma.queue.findMany({
       where: { businessId },
       orderBy: { createdAt: "desc" }
-    });
+    })
 
     res.json(queues);
   } catch (err) {
-    console.error("getBusinessQueues error:", err);
-    res.status(500).json({ message: "Failed to fetch business queues" });
+    console.error("getBusinessQueues error:", err)
+    res.status(500).json({ message: "Failed to fetch business queues" })
   }
-};
+}

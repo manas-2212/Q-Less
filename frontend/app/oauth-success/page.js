@@ -11,13 +11,13 @@ export default function OAuthSuccessPage() {
       window.location.href = "/login";
       return;
     }
-    localStorage.setItem("token", token);
-    const role = getRoleFromToken(token);
+    localStorage.setItem("token", token)
+    const role = getRoleFromToken(token)
 
     if (role === "BUSINESS") {
-      window.location.href ="/dashboard/business";
+      window.location.href ="/dashboard/business"
     }else{
-      window.location.href= "/dashboard/customer";
+      window.location.href= "/dashboard/customer"
     }
   }, []);
 

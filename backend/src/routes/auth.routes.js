@@ -13,15 +13,14 @@ router.get(
     session: false
   })
 );
-
 router.get(
   "/google/callback",
   passport.authenticate("google", {
     session: false,
-    failureRedirect: `${FRONTEND_URL}/login`
+    failureRedirect:`${FRONTEND_URL}/login`
   }),
   (req, res) => {
-    const { token } = req.user;
+    const {token} = req.user;
 
     res.redirect(
       `${FRONTEND_URL}/oauth-success?token=${token}`
@@ -29,7 +28,7 @@ router.get(
   }
 );
 
-router.post("/signup", signup);
-router.post("/login", login);
+router.post("/signup", signup)
+router.post("/login", login)
 
 module.exports = router;

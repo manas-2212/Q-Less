@@ -28,20 +28,20 @@ export default function LoginPage() {
       const role = getRoleFromToken(data.token);
 
       if (role === "BUSINESS") {
-        window.location.href = "/dashboard/business";
+        window.location.href = "/dashboard/business"
       } else {
-        window.location.href = "/dashboard/customer";
+        window.location.href = "/dashboard/customer"
       }
 
     } catch (err) {
       setError("Invalid email or password");
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google`;
+    window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google`
   };
   
 
